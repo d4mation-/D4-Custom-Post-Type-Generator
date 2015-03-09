@@ -19,13 +19,14 @@ class CPT {
 	
 	protected $_menu_icon = null; // Defaults to Posts icon
 	protected $_supports = array( 'title', 'editor', 'thumbnail' );
+	protected $_taxonomies = array();
 	protected $_menu_position = 5;
 	protected $_capability_type = 'post';
-	protected $_capabilities;
+	protected $_capabilities = array();
 	
 	protected $_options;
 	
-	function __construct( $post_type_names = array( 'Custom Post Type' ), Array $options = array() ) {
+	function __construct( $post_type_names = array( 'Custom Post Type' ), $options = array() ) {
 		
 		if ( ! is_array( $post_type_names ) ) {
 			
@@ -291,6 +292,33 @@ class CPT {
 		
 	}
 	
+	public function get_taxonomies() {
+		
+		return $this->_taxonomies;
+		
+	}
+	
+	public function set_taxonomies( $taxonomies ) {
+		
+		if ( empty( $taxonomies ) ) {
+			
+			throw new \ErrorException( 'CPT taxonomies need to be defined' );
+			
+		}
+		
+		if ( is_array( $taxonomies ) ) {
+			
+			$this->_taxonomies = $taxonomies;
+			
+		}
+		else {
+			$this->_taxonomies = array( $taxonomies );
+		}
+		
+		return $this;
+		
+	}
+	
 	public function register_post_type() {
 		
 		// Friendly post type names.
@@ -313,7 +341,7 @@ class CPT {
 			'search_items'       => sprintf( __( 'Search %s', $textdomain ), $plural ),
 			'not_found'          => sprintf( __( 'No %s found', $textdomain ), $plural ),
 			'not_found_in_trash' => sprintf( __( 'No %s found in Trash', $textdomain ), $plural ),
-			'parent_item_colon'  => sprintf( __( 'Parent %s:', $textdomain ), $singular )
+			'parent_item_colon'  => sprintf( __( 'Parent %s:', $textdomain ), $singular ),
 		);
 
 		// Default options.
@@ -321,6 +349,7 @@ class CPT {
 			'labels' => $labels,
 			'menu_icon' => $this->_menu_icon,
 			'supports' => $this->_supports,
+			'taxonomies' => $this->_taxonomies,
 			'menu_position' => $this->_menu_position,
 			'public' => true,
 			'show_ui' => true,
@@ -337,10 +366,11 @@ class CPT {
 				'pages' => true,
 			),
 			'capability_type' => $this->_capability_type,
+			'capabilities' => $this->_capabilities,
 		);
 
 		// Merge user submitted options with defaults.
-		$args = array_replace_recursive( $defaults, $this->_options );
+		$args = array_replace( $defaults, $this->_options );
 
 		// Set the object options as full options passed.
 		$this->_options = $args;
@@ -351,6 +381,12 @@ class CPT {
 			// Register the post type.
 			register_post_type( $this->_post_type_names['db_name'], $this->_options );
 		}
+		
+	}
+	
+	public function get_options() {
+		
+		return $this->_options; // Debugging only
 		
 	}
 	
