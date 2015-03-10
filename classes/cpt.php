@@ -365,8 +365,8 @@ class CPT {
 	public function register_post_type() {
 		
 		// Friendly post type names.
+		$singular = $this->_post_type_names['singular'];
 		$plural   = $this->_post_type_names['plural'];
-		$singular = $this->_post_type_names['plural'];
 		$slug     = $this->_post_type_names['slug'];
 		$textdomain = $slug;
 
