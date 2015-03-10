@@ -21,7 +21,7 @@ class CPT {
 	protected $_supports = array( 'title', 'editor', 'thumbnail' );
 	protected $_taxonomies = array();
 	protected $_menu_position = 5;
-	protected $_capability_type = 'post';
+	protected $_capability_type = array('post', 'posts');
 	protected $_capabilities = array();
 	
 	protected $_options;
@@ -71,13 +71,9 @@ class CPT {
 	
 	}
 	
-	protected function _make_singular( $name = null ) {
+	protected function _make_singular( $name ) {
 		
-		if ( ! isset( $name ) ) {
-			
-			$name = $this->_post_type_names;
-			
-		}
+		return str_replace( '_', ' ' str_replace( '-', ' ', ucwords( $name ) ) );
 		
 	}
 	
@@ -265,33 +261,6 @@ class CPT {
 		
 	}
 	
-	public function get_capability_type () {
-		
-		return $this->_capability_type;
-		
-	}
-	
-	public function set_capability_type( $capability_type ) {
-		
-		if ( empty( $capability_type ) ) {
-			
-			throw new \ErrorException( 'CPT capability type needs to be defined' );
-			
-		}
-		
-		if ( is_array( $capability_type ) ) {
-			
-			$this->_supports = $capability_type;
-			
-		}
-		else {
-			$this->_supports = array( $capability_type, $this->_make_plural( $capability_type) );
-		}
-		
-		return $this;
-		
-	}
-	
 	public function get_taxonomies() {
 		
 		return $this->_taxonomies;
@@ -314,6 +283,74 @@ class CPT {
 		else {
 			$this->_taxonomies = array( $taxonomies );
 		}
+		
+		return $this;
+		
+	}
+	
+	public function get_capability_type() {
+		
+		return $this->_capability_type;
+		
+	}
+	
+	public function set_capability_type( $capability_type ) {
+		
+		if ( empty( $capability_type ) ) {
+			
+			throw new \ErrorException( 'CPT capability type needs to be defined' );
+			
+		}
+		
+		if ( is_array( $capability_type ) ) {
+			$this->_capability_type = $capability_type;
+		}
+		else {
+			$this->_capability_type = array( $capability_type, $this->_make_plural( $capability_type) );
+		}
+		
+		$this->_set_capabilities( $capability_type );
+		
+		return $this;
+		
+	}
+	
+	public function get_capabilities() {
+		
+		return $this->_capabilities;
+		
+	}
+	
+	protected function _set_capabilities( $capability_type ) {
+		
+		if ( is_array( $capability_type ) ) {
+			// All Good
+		}
+		else {
+			$capability_type = array( $capability_type, $this->_make_plural( $capability_type) );
+		}
+		
+		$capabilities = array( // Custom Post Type holds ALL capabilities. Roles are given individual capabilities.
+		
+			// Singular
+			'edit_post'	=>	'edit_' . $capability_type[0],
+			'read_post'	=>	'read_' . $capability_type[0],
+			'delete_post'	=>	'delete_' . $capability_type[0],
+			// Plural
+			'edit_posts'	=>	'edit_' . $capability_type[1],
+			'edit_others_posts'	=>	'edit_' . $capability_type[1],
+			'publish_posts'	=>	'publish_' . $capability_type[1],
+			'read_private_posts'	=>	'read_private_' . $capability_type[1],
+			'delete_posts'	=>	'delete_' . $capability_type[1],
+			'delete_private_posts'	=>	'delete_private_' . $capability_type[1],
+			'delete_published_posts'	=>	'delete_published_' . $capability_type[1],
+			'delete_others_posts'	=>	'delete_others_' . $capability_type[1],
+			'edit_private_posts'	=>	'edit_private_' . $capability_type[1],
+			'edit_published_posts'	=>	'edit_published_' . $capability_type[1],
+		
+		);
+		
+		$this->_capabilities = $capabilities;
 		
 		return $this;
 		
@@ -386,7 +423,7 @@ class CPT {
 	
 	public function get_options() {
 		
-		return $this->_options; // Debugging only
+		return $this->_options; // Debugging only. No real need for this in production setting.
 		
 	}
 	
