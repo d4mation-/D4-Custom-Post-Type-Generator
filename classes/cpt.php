@@ -18,10 +18,10 @@ class CPT {
 	);
 	
 	protected $_menu_icon = null; // Defaults to Posts icon
-	protected $_supports = array( 'title', 'editor', 'thumbnail' );
+	protected $_supports = array( 'title', 'editor', 'thumbnail' ); // Actual WordPress defaults are kind of dumb for this.
 	protected $_taxonomies = array();
 	protected $_menu_position = 5;
-	protected $_capability_type = array('post', 'posts');
+	protected $_capability_type = 'post';
 	protected $_capabilities = array();
 	
 	protected $_options;
@@ -73,7 +73,7 @@ class CPT {
 	
 	protected function _make_singular( $name ) {
 		
-		return str_replace( '_', ' ' str_replace( '-', ' ', ucwords( $name ) ) );
+		return str_replace( '_', ' ', str_replace( '-', ' ', ucwords( $name ) ) );
 		
 	}
 	
@@ -318,6 +318,12 @@ class CPT {
 	public function get_capabilities() {
 		
 		return $this->_capabilities;
+		
+	}
+	
+	public function set_capabilities() {
+		
+		throw new \ErrorException( 'set_capabilities() should not be directly accessed. Use set_capability_type() to genereate the Capabilities based on your Singular and Plural Capability Types.' );
 		
 	}
 	
