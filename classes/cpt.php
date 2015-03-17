@@ -149,7 +149,7 @@ class CPT {
 			
 		}
 		
-		$this->_post_type_names['slug'] = $slug;
+		$this->_post_type_names['slug'] = $this->_make_slug( $slug );
 		
 		return $this;
 		
@@ -168,7 +168,7 @@ class CPT {
 			
 		}
 		
-		$this->_post_type_names['db_name'] = $db_name;
+		$this->_post_type_names['db_name'] = $this->_make_db_name( $db_name );
 		
 		return $this;
 		
@@ -323,16 +323,13 @@ class CPT {
 	
 	public function set_capabilities() {
 		
-		throw new \ErrorException( 'set_capabilities() should not be directly accessed. Use set_capability_type() to genereate the Capabilities based on your Singular and Plural Capability Types.' );
+		throw new \ErrorException( 'set_capabilities() should not be directly accessed. Use set_capability_type() to generate the Capabilities based on your Singular and Plural Capability Types.' );
 		
 	}
 	
 	protected function _set_capabilities( $capability_type ) {
 		
-		if ( is_array( $capability_type ) ) {
-			// All Good
-		}
-		else {
+		if ( ! is_array( $capability_type ) ) {
 			$capability_type = array( $capability_type, $this->_make_plural( $capability_type) );
 		}
 		

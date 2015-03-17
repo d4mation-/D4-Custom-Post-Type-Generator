@@ -13,7 +13,6 @@ class Taxonomy {
 	protected $_taxonomy_names = array(
 		'singular'	=>	'Custom Taxonomy',
 		'plural'	=>	'Custom Taxonomies',
-		'slug'		=>	'custom_taxonomy',
 		'slug'		=>	'custom-taxonomy',
 		'db_name'	=>	'custom_taxonomy',
 	);
@@ -59,9 +58,17 @@ class Taxonomy {
 		}
 		
 		if ( ! is_array( $post_types ) ) {
+			if ( ! post_type_exists( $post_types ) ) {
+				$post_types = $this->_make_db_name( $post_types );
+			}
 			$this->_post_types = array( $post_types );
 		}
 		else{
+			foreach ( $post_types as $post_type ) {
+				if ( ! post_type_exists( $post_type ) ) {
+					$post_types[] = $this->_make_db_name( $post_type );
+				}
+			}
 			$this->_post_types = $post_types;
 		}
 		
@@ -152,7 +159,7 @@ class Taxonomy {
 			
 		}
 		
-		$this->_taxonomy_names['slug'] = $slug;
+		$this->_taxonomy_names['slug'] = $this->_make_slug( $slug );
 		
 		return $this;
 		
@@ -171,7 +178,7 @@ class Taxonomy {
 			
 		}
 		
-		$this->_taxonomy_names['db_name'] = $db_name;
+		$this->_taxonomy_names['db_name'] = $this->_make_db_name( $db_name );
 		
 		return $this;
 		
@@ -252,12 +259,12 @@ class Taxonomy {
 		// Set the object options as full options passed.
 		$this->_options = $args;
 
-		// Check that the post type doesn't already exist.
-        //if ( ! post_type_exists( $this->_taxonomy_names['db_name'] ) ) {
+		// Check that the taxonomy doesn't already exist.
+        if ( ! taxonomy_exists( $this->_taxonomy_names['db_name'] ) ) {
 
 			// Register the post type.
 			register_taxonomy( $this->_taxonomy_names['db_name'], $this->_post_types, $this->_options );
-		//}
+		}
 		
 	}
 	
