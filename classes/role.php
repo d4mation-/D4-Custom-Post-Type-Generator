@@ -4,8 +4,8 @@
  * Create a new object of this class to create a Role Object.
  * Role Objects can be created without Creating a Role, so they can be used to edit existing Capabilities.
  *
- * Role/Permission creation is persistent, so you can/should delete the code you write after running it. 
- * Deleting the code will not remove the Roles/Permissions. Explicitly Deleting/Removing them will.
+ * Role/Permission creation is persistent, so deleting the code will not remove the Roles/Permissions. 
+ * Explicitly Deleting/Removing them will.
  *
  * @author Eric Defore <d4mation>
  */
@@ -37,8 +37,6 @@ class Role {
 		else {
 			$this->_capability_type = $capability_type;
 		}
-		
-		
 	
 	}
 	
@@ -169,6 +167,14 @@ class Role {
 	public function set_capabilities() {
 		
 		throw new \ErrorException( 'set_capabilities() should not be directly accessed. Use set_permissions() to generate the Capabilities based on your Singular and Plural Capability Types.' );
+		
+	}
+	
+	public function reset_capabilities() {
+		
+		$this->_capabilities = array( 'read' ); // Default
+		
+		return $this;
 		
 	}
 	
@@ -359,7 +365,14 @@ class Role {
 		}
 		else{
 			
-			$roles = array( $this->_role_name, 'administrator', 'editor', 'author' );
+			if ( get_role( $this->_role_name ) !== null ) {
+				
+				$roles = array( $this->_role_name, 'administrator', 'editor', 'author' );
+				
+			}
+			else {
+				$roles = array( 'administrator', 'editor', 'author' );
+			}
 			
 			foreach ( $roles as $the_role ) {
 				foreach ( $capabilities as $capability ) {
@@ -391,7 +404,14 @@ class Role {
 		}
 		else{
 			
-			$roles = array( $this->_role_name, 'administrator', 'editor', 'author' );
+			if ( get_role( $this->_role_name ) !== null ) {
+				
+				$roles = array( $this->_role_name, 'administrator', 'editor', 'author' );
+				
+			}
+			else {
+				$roles = array( 'administrator', 'editor', 'author' );
+			}
 			
 			unset( $capabilities[0] ); // Just to be safe, don't remove the 'read' capability.
 			
@@ -408,15 +428,23 @@ class Role {
 		
 	}
 	
-	public function add_role() {
+	protected function _add_role() {
 		
-		add_role( $this->_role_name, $this->_role_display_name, $this->_capabilities );
+		if ( get_role( $this->_role_name ) == null ) {
+		
+			add_role( $this->_role_name, $this->_role_display_name, $this->_capabilities );
+			
+		}
 		
 	}
 	
-	public function remove_role() {
+	protected function _remove_role() {
 		
-		remove_role( $this->_role_name );
+		if ( get_role( $this->_role_name ) !== null ) {
+		
+			remove_role( $this->_role_name );
+			
+		}
 		
 	}
 	
@@ -428,13 +456,17 @@ class Role {
 	
 	public function create() {
 		
-		add_action( 'init', array( $this, 'add_role' ) );
+		$this->_add_role(); // Normally we'd hook this somewhere, but permissions cannot be set properly when using a hook unless you refresh first...
+		
+		return $this;
 		
 	}
 	
 	public function destroy() {
 		
-		add_action( 'init', array( $this, 'remove_role' ) );
+		$this->_remove_role();
+		
+		return $this;
 		
 	}
 
