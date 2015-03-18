@@ -354,6 +354,12 @@ class Role {
 		
 		if ( $only_current_role === true ) {
 			
+			if ( get_role( $this->_role_name ) == null ) {
+
+				throw new \ErrorException( 'The WP Role object does not exist.' );
+			
+			}
+			
 			$role = get_role( $this->_role_name );
 			
 			foreach ( $capabilities as $capability ) {
@@ -392,6 +398,12 @@ class Role {
 		$capabilities = $this->_capabilities;
 		
 		if ( $only_current_role === true ) {
+			
+			if ( get_role( $this->_role_name ) == null ) {
+
+				throw new \ErrorException( 'The WP Role object does not exist.' );
+			
+			}
 			
 			$role = get_role( $this->_role_name );
 			
