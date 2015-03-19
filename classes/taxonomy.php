@@ -19,6 +19,8 @@ class Taxonomy {
 	
 	protected $_post_types = array( 'post' );
 	
+	protected $_is_hierarchical= true;
+	
 	protected $_options;
 	
 	function __construct( $taxonomy_names = array( 'Custom Taxonomy' ), $post_types = array( 'post' ), $options = array() ) {
@@ -204,6 +206,26 @@ class Taxonomy {
 		else{
 			$this->_post_types = array( $post_types );
 		}
+		
+	}
+	
+	public function get_hierarchical() {
+		
+		return $this->_is_hierarchical;
+		
+	}
+	
+	public function set_hierarchical( $boolean ) {
+		
+		if ( empty( $boolean ) || is_bool( $boolean ) ) {
+			
+			throw new \ErrorException( 'Taxonomy hierarchical value needs to be defined' );
+			
+		}
+		
+		$this->_is_hierarchical = $boolean;
+		
+		return $this;
 		
 	}
 	

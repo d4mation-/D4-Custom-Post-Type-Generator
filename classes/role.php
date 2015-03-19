@@ -16,20 +16,37 @@ class Role {
 	
 	protected $_role_name = 'custom_role';
 	protected $_role_display_name = 'Custom Role';
+	
+	protected $_role_names = array(
+		'singular'	=>	'Custom Role',
+		'db_name'	=>	'custom_role',
+	);
+	
 	protected $_capability_type = 'post';
 	protected $_permissions = 'all';
 	protected $_capabilities = array( 'read' ); // Without the "read" capability the user doesn't have a backend at all.
 	
-	function __construct( $role_name = 'custom_role', $role_display_name = 'Custom Role', $capability_type = 'post', $permissions = array( 'all' ) ) {
+	function __construct( $role_names = array( 'Custom Role' ), $capability_type = 'post', $permissions = array( 'all' ) ) {
 		
-		if ( strpos( $role_name, ' ' ) === false ) {
-			$this->_role_name = $role_name;
-		}
-		else{
-			$this->_role_name = str_replace( '-', '_', $this->_make_db_name( $role_name ) );
+		if ( ! is_array( $role_names ) ) {
+			
+			$role_names = array( $role_names );
+			
 		}
 		
-		$this->_role_display_name = $role_display_name;
+		if( isset( $role_names[0] ) ) {
+			$this->_role_names['singular'] = $role_names[0];
+		}
+		else {
+			// Constructor handles it.
+		}
+		
+		if( isset( $role_names[1] ) ) {
+			$this->_role_names['db_name'] = $role_names[1];
+		}
+		else {
+			$this->_role_names['db_name'] = $this->_make_db_name( $this->_role_names['singular'] );
+		}
 		
 		if ( ! is_array( $capability_type ) ) {
 			$this->_capability_type = array( $capability_type, $this->_make_plural( $capability_type ) );
@@ -57,29 +74,9 @@ class Role {
 		
 	}
 	
-	public function get_role_name() {
-		
-		return $this->_role_name;
-		
-	}
-	
-	public function set_role_name( $role_name ) {
-		
-		if ( empty( $role_name ) || ! is_string( $role_name ) ) {
-			
-			throw new \ErrorException( 'Role name needs to be defined' );
-			
-		}
-		
-		$this->_role_name = $this->_make_db_name( $role_name );
-		
-		return $this;
-		
-	}
-	
 	public function get_role_display_name() {
 		
-		return $this->_role_display_name;
+		return $this->_role_names['singular'];
 		
 	}
 	
@@ -91,7 +88,27 @@ class Role {
 			
 		}
 		
-		$this->_role_display_name = $role_display_name;
+		$this->_role_names['singular'] = $role_display_name;
+		
+		return $this;
+		
+	}
+	
+	public function get_role_name() {
+		
+		return $this->_role_names['db_name'];
+		
+	}
+	
+	public function set_role_name( $role_name ) {
+		
+		if ( empty( $role_name ) || ! is_string( $role_name ) ) {
+			
+			throw new \ErrorException( 'Role name needs to be defined' );
+			
+		}
+		
+		$this->_role_names['db_name'] = $this->_make_db_name( $role_names['singular'] );
 		
 		return $this;
 		
@@ -354,13 +371,13 @@ class Role {
 		
 		if ( $only_current_role === true ) {
 			
-			if ( get_role( $this->_role_name ) == null ) {
+			if ( get_role( $this->_role_names['db_name'] ) == null ) {
 
 				throw new \ErrorException( 'The WP Role object does not exist.' );
 			
 			}
 			
-			$role = get_role( $this->_role_name );
+			$role = get_role( $this->_role_names['db_name'] );
 			
 			foreach ( $capabilities as $capability ) {
 				
@@ -371,9 +388,9 @@ class Role {
 		}
 		else{
 			
-			if ( get_role( $this->_role_name ) !== null ) {
+			if ( get_role( $this->_role_names['db_name'] ) !== null ) {
 				
-				$roles = array( $this->_role_name, 'administrator', 'editor', 'author' );
+				$roles = array( $this->_role_names['db_name'], 'administrator', 'editor', 'author' );
 				
 			}
 			else {
@@ -399,13 +416,13 @@ class Role {
 		
 		if ( $only_current_role === true ) {
 			
-			if ( get_role( $this->_role_name ) == null ) {
+			if ( get_role( $this->_role_names['db_name'] ) == null ) {
 
 				throw new \ErrorException( 'The WP Role object does not exist.' );
 			
 			}
 			
-			$role = get_role( $this->_role_name );
+			$role = get_role( $this->_role_names['db_name'] );
 			
 			foreach ( $capabilities as $capability ) {
 				
@@ -416,9 +433,9 @@ class Role {
 		}
 		else{
 			
-			if ( get_role( $this->_role_name ) !== null ) {
+			if ( get_role( $this->_role_names['db_name'] ) !== null ) {
 				
-				$roles = array( $this->_role_name, 'administrator', 'editor', 'author' );
+				$roles = array( $this->_role_names['db_name'], 'administrator', 'editor', 'author' );
 				
 			}
 			else {
@@ -442,9 +459,9 @@ class Role {
 	
 	protected function _add_role() {
 		
-		if ( get_role( $this->_role_name ) == null ) {
+		if ( get_role( $this->_role_names['db_name'] ) == null ) {
 		
-			add_role( $this->_role_name, $this->_role_display_name, $this->_capabilities );
+			add_role( $this->_role_names['db_name'], $this->_role_names['singular'], $this->_capabilities );
 			
 		}
 		
@@ -452,9 +469,9 @@ class Role {
 	
 	protected function _remove_role() {
 		
-		if ( get_role( $this->_role_name ) !== null ) {
+		if ( get_role( $this->_role_names['db_name'] ) !== null ) {
 		
-			remove_role( $this->_role_name );
+			remove_role( $this->_role_names['db_name'] );
 			
 		}
 		
