@@ -2,7 +2,7 @@
 /**
  * Class and Trait autoloader for this plugin
  *
- * @author Eric Defore <d4mation>
+ * @author Eric Defore <d4mation->
  */
 
 /*

@@ -3,7 +3,7 @@
  * The Taxonomy class
  * Create a new object of this class to create a Taxonomy.
  *
- * @author Eric Defore <d4mation>
+ * @author Eric Defore <d4mation->
  */
 
 namespace d4\CPT;

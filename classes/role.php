@@ -7,7 +7,7 @@
  * Role/Permission creation is persistent, so deleting the code will not remove the Roles/Permissions. 
  * Explicitly Deleting/Removing them will.
  *
- * @author Eric Defore <d4mation>
+ * @author Eric Defore <d4mation->
  */
 
 namespace d4\CPT;

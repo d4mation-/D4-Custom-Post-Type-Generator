@@ -2,6 +2,7 @@
 
 Currently it only supports Custom Post Types.
 
+Role Creation is iffy still.
 
 Getter and Setter Functions can be found in the CPT class.
 
