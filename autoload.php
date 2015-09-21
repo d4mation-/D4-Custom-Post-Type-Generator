@@ -19,32 +19,32 @@ spl_autoload_register( 'd4_cpt_generator_autoloader' );
  * @return void
  */
 function d4_cpt_generator_autoloader( $resource = '' ) {
-	$namespace_root = 'd4\CPT';
+    $namespace_root = 'd4\CPT';
 
-	$resource = trim( $resource, '\\' );
+    $resource = trim( $resource, '\\' );
 
-	if ( empty( $resource ) || strpos( $resource, '\\' ) === false || strpos( $resource, $namespace_root ) !== 0 ) {
-		//not our namespace, bail out
-		return;
-	}
+    if ( empty( $resource ) || strpos( $resource, '\\' ) === false || strpos( $resource, $namespace_root ) !== 0 ) {
+        //not our namespace, bail out
+        return;
+    }
 
-	$path = str_replace(
-				'_',
-				'-',
-				implode(
-					'/',
-					array_slice(	//remove the namespace root and grab the actual resource
-						explode( '\\', $resource ),
-						2
-					)
-				)
-			);
+    $path = str_replace(
+        '_',
+        '-',
+        implode(
+            '/',
+            array_slice(	//remove the namespace root and grab the actual resource
+                explode( '\\', $resource ),
+                2
+            )
+        )
+    );
 
-	$path = sprintf( '%s/classes/%s.php', untrailingslashit( D4_CPT_ROOT ), strtolower( $path ) );
+    $path = sprintf( '%s/classes/%s.php', untrailingslashit( D4_CPT_ROOT ), strtolower( $path ) );
 
-	if ( file_exists( $path ) ) {
-		require_once $path;
-	}
+    if ( file_exists( $path ) ) {
+        require_once $path;
+    }
 }
 
 
