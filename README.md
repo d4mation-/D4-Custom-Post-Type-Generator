@@ -15,13 +15,12 @@ _Generate CPTs, Taxonomies, and Permissions/Roles quickly_
 * If Slug is not set, the Singular Name will be converted to lowercase with spaces replaced with hyphens.
 * If Database Name is not set, the singular name will be converted to lowercase with spaces replaced with underscores.
 
-
-    $post_type_names = array(
-        'Custom Post Type', // Singluar
-        'Custom Post Types', // Plural
-        'custom-post-type', // Slug
-        'custom_post_type', // "database_name"
-    );
+        $post_type_names = array(
+            'Custom Post Type', // Singluar
+            'Custom Post Types', // Plural
+            'custom-post-type', // Slug
+            'custom_post_type', // "database_name"
+        );
 
 ```$options``` holds any arguments for registering the Custom Post Type that I haven't bothered making a Getter/Setter for. Anything placed in here will override the defaults as well as anything that has been set with the Setter functions within the Class.
 
@@ -117,11 +116,10 @@ Coming Soon...
 
 * If Database Name is not set, the singular name will be converted to lowercase with spaces replaced with underscores.
 
-
-    $role_names = array(
-        'Custom Role', // Singluar
-        'custom_role', // "database_name"
-    );
+        $role_names = array(
+            'Custom Role', // Singluar
+            'custom_role', // "database_name"
+        );
 
 ### Getters/Setters ###
 
@@ -139,12 +137,12 @@ Coming Soon...
         * It will add an "s" at the end to make it plural.
 * ```get_permissions()``` and ```set_permissions( Array $permissions )```
     * Permissions are generated using the set Capability Type.
-    * You can set all Permissions within a capability type like so:
-    *
+    * You can set all Permissions within a capability type:
+
             $role->set_capability_type( 'post' );
             $role->set_permissions( 'all' );
-    * You can also be more granular, like so:
-    *
+    * You can also be more granular:
+
             $role->set_capability_type( 'post' );
             $role->set_permissions( array(
                 'read' => 'all',
