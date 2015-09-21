@@ -178,7 +178,7 @@ class Role {
 
     }
 
-    public function reset_capabilities() {
+    public function clear_permissions_queue() {
 
         $this->_capabilities = array( 'read', 'level_1' ); // Default
 
