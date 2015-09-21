@@ -18,7 +18,7 @@ class CPT {
     );
 
     protected $_menu_icon = null; // Defaults to Posts icon
-    protected $_supports = array( 'title', 'editor', 'thumbnail' ); // Actual WordPress defaults are kind of dumb for this.
+    protected $_supports = array( 'title', 'editor', 'thumbnail', 'author', ); // Actual WordPress defaults are kind of dumb for this.
     protected $_taxonomies = array();
     protected $_menu_position = 5;
     protected $_capability_type = 'post';
@@ -234,7 +234,7 @@ class CPT {
 
         }
         else {
-            $this->_supports = array( $supports );
+            $this->_supports = explode( ',', trim( $supports ) );
         }
 
         return $this;
@@ -249,7 +249,7 @@ class CPT {
 
     public function set_menu_position( $menu_position ) {
 
-        if ( empty( $menu_position ) || ! is_int( $menu_position ) ) {
+        if ( ( empty( $menu_position ) ) || ( ! is_int( $menu_position ) ) || ( ! is_null( $menu_position ) ) ) {
 
             throw new \ErrorException( 'CPT menu position needs to be defined' );
 
@@ -281,7 +281,7 @@ class CPT {
 
         }
         else {
-            $this->_taxonomies = array( $taxonomies );
+            $this->_taxonomies = explode( ',', trim( $taxonomies ) );
         }
 
         return $this;
