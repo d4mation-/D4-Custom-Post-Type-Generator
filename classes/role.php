@@ -24,9 +24,9 @@ class Role {
 	
 	protected $_capability_type = 'post';
 	protected $_permissions = 'all';
-	protected $_capabilities = array( 'read' ); // Without the "read" capability the user doesn't have a backend at all.
+	protected $_capabilities = array( 'read', 'level_1' ); // Without the "read" capability the user doesn't have a backend at all. level_1 ensures they can be set as the "author" of a post
 	
-	function __construct( $role_names = array( 'Custom Role' ), $capability_type = 'post', $permissions = array( 'all' ) ) {
+	function __construct( $role_names = array( 'Custom Role' ) ) {
 		
 		if ( ! is_array( $role_names ) ) {
 			
@@ -48,12 +48,14 @@ class Role {
 			$this->_role_names['db_name'] = $this->_make_db_name( $this->_role_names['singular'] );
 		}
 		
-		if ( ! is_array( $capability_type ) ) {
+		/*if ( ! is_array( $capability_type ) ) {
 			$this->_capability_type = array( $capability_type, $this->_make_plural( $capability_type ) );
 		}
 		else {
 			$this->_capability_type = $capability_type;
-		}
+		}*/
+
+        //$this->set_permissions( $permissions );
 	
 	}
 	
@@ -148,16 +150,14 @@ class Role {
 	
 	public function set_permissions( $permissions ) {
 		
-		if ( ! is_array($permissions) ) {
-			if ( strtolower( $permissions ) == 'all' ) {
+		if ( ( ( ! is_array( $permissions ) ) && ( strtolower( $permissions ) == 'all' ) ) || ( ( isset( $permissions[0] ) ) && ( strtolower( $permissions[0] ) == 'all' ) ) ) {
 				
 				$this->_permissions = 'all';
 				
 				$this->_set_capabilities( $this->_capability_type, $this->_permissions ); // Send "All" as a String
 				
 				return $this; // Exit execution here
-				
-			}
+
 		}
 		
 		if ( empty( $permissions ) || ! is_array( $permissions ) || ! $this->_is_associative_array( $permissions ) ) {
@@ -189,7 +189,7 @@ class Role {
 	
 	public function reset_capabilities() {
 		
-		$this->_capabilities = array( 'read' ); // Default
+		$this->_capabilities = array( 'read', 'level_1' ); // Default
 		
 		return $this;
 		
@@ -413,6 +413,9 @@ class Role {
 	public function remove_permissions( $only_current_role = false ) {
 		
 		$capabilities = $this->_capabilities;
+
+        unset( $capabilities[0] ); // Just to be safe, don't remove the 'read' or 'level_1' capabilities.
+        unset( $capabilities[1] );
 		
 		if ( $only_current_role === true ) {
 			
@@ -441,9 +444,7 @@ class Role {
 			else {
 				$roles = array( 'administrator', 'editor', 'author' );
 			}
-			
-			unset( $capabilities[0] ); // Just to be safe, don't remove the 'read' capability.
-			
+
 			foreach ( $roles as $the_role ) {
 				foreach ( $capabilities as $capability ) {
 					
@@ -461,8 +462,24 @@ class Role {
 		
 		if ( get_role( $this->_role_names['db_name'] ) == null ) {
 		
-			add_role( $this->_role_names['db_name'], $this->_role_names['singular'], $this->_capabilities );
-			
+            // permission setting handled elsewhere
+			$role = add_role( $this->_role_names['db_name'], $this->_role_names['singular'], array() );
+
+            if ( ! is_array( $this->_capabilities ) ) {
+
+                $role->add_cap( trim( $this->_capabilities ) );
+
+            }
+            else {
+
+                foreach ( $this->_capabilities as $capability ) {
+
+                    $role->add_cap( trim( $capability ) );
+
+                }
+
+            }
+
 		}
 		
 	}
