@@ -23,6 +23,7 @@ class CPT {
     protected $_menu_position = 5;
     protected $_is_public = true;
     protected $_has_archive = true;
+    protected $_show_in_rest = true;
     protected $_capability_type = 'post';
     protected $_capabilities = array();
 
@@ -330,6 +331,26 @@ class CPT {
 
     }
 
+    public function get_show_in_rest() {
+
+        return $this->_show_in_rest;
+
+    }
+
+    public function set_show_in_rest( $boolean ) {
+
+        if ( empty( $boolean ) || is_bool( $boolean ) ) {
+
+            throw new \ErrorException( 'CPT show in rest value needs to be defined' );
+
+        }
+
+        $this->_show_in_rest = $boolean;
+
+        return $this;
+
+    }
+
     public function get_capability_type() {
 
         return $this->_capability_type;
@@ -436,6 +457,7 @@ class CPT {
             'public' => $this->_is_public,
             'show_ui' => true,
             'show_in_menu' => true,
+            'show_in_rest' => true,
             'publicly_queryable' => true,
             'exclude_from_search' => false,
             'has_archive' => $this->_has_archive,

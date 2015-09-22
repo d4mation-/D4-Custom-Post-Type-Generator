@@ -96,7 +96,9 @@ _Generate CPTs, Taxonomies, and Permissions/Roles quickly_
         * It will add an "s" at the end to make it plural.
 * ```get_public()``` and ```set_public( boolean $is_public )```
     * Overrides the `$default` settings
-* ```get_has_archive``` and ```set_has_archive( boolean $has_archive )```
+* ```get_has_archive()``` and ```set_has_archive( boolean $has_archive )```
+    * Overrides the `$default` settings
+* ```get_show_in_rest()``` and ```set_show_in_rest( boolean $show_in_rest )```
     * Overrides the `$default` settings
 
 # Custom Taxonomies #
