@@ -17,6 +17,9 @@ class Taxonomy {
         'db_name'	=>	'custom_taxonomy',
     );
 
+    protected $_is_public = false;
+    protected $_show_admin_columns = true;
+
     protected $_post_types = array( 'post' );
 
     protected $_is_hierarchical= true;
@@ -186,6 +189,46 @@ class Taxonomy {
 
     }
 
+    public function get_public() {
+
+        return $this->_is_public;
+
+    }
+
+    public function set_public( $boolean ) {
+
+        if ( empty( $boolean ) || ! is_bool( $boolean ) ) {
+
+            throw new \ErrorException( 'Taxonomy public value needs to be defined' );
+
+        }
+
+        $this->_is_public = $boolean;
+
+        return $this;
+
+    }
+
+    public function get_show_admin_column() {
+
+        return $this->_show_admin_column;
+
+    }
+
+    public function set_show_admin_column( $boolean ) {
+
+        if ( empty( $boolean ) || ! is_bool( $boolean ) ) {
+
+            throw new \ErrorException( 'Taxonomy show admin column value needs to be defined' );
+
+        }
+
+        $this->_show_admin_column = $boolean;
+
+        return $this;
+
+    }
+
     public function get_post_types() {
 
         return $this->_post_types;
@@ -217,7 +260,7 @@ class Taxonomy {
 
     public function set_hierarchical( $boolean ) {
 
-        if ( empty( $boolean ) || is_bool( $boolean ) ) {
+        if ( empty( $boolean ) || ! is_bool( $boolean ) ) {
 
             throw new \ErrorException( 'Taxonomy hierarchical value needs to be defined' );
 
@@ -259,12 +302,12 @@ class Taxonomy {
         // Default options.
         $defaults = array(
             'labels' => $labels,
-            'public' => false,
+            'public' => $this->_is_public,
             'show_in_nav_menus' => false,
             'show_ui' => true,
             'show_tagcloud' => false,
-            'show_admin_column' => true,
-            'hierarchical' => true,
+            'show_admin_column' => $this->_show_admin_column,
+            'hierarchical' => $this->_is_hierarchical,
 
             'rewrite' => array(
                 'slug' => $slug,

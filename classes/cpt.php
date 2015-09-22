@@ -299,7 +299,7 @@ class CPT {
 
     public function set_public( $boolean ) {
 
-        if ( empty( $boolean ) || is_bool( $boolean ) ) {
+        if ( empty( $boolean ) || ! is_bool( $boolean ) ) {
 
             throw new \ErrorException( 'CPT public value needs to be defined' );
 
@@ -317,9 +317,9 @@ class CPT {
 
     }
 
-    public function set_has_archivel( $boolean ) {
+    public function set_has_archive( $boolean ) {
 
-        if ( empty( $boolean ) || is_bool( $boolean ) ) {
+        if ( empty( $boolean ) || ! is_bool( $boolean ) ) {
 
             throw new \ErrorException( 'CPT has archive value needs to be defined' );
 
@@ -339,7 +339,7 @@ class CPT {
 
     public function set_show_in_rest( $boolean ) {
 
-        if ( empty( $boolean ) || is_bool( $boolean ) ) {
+        if ( empty( $boolean ) || ! is_bool( $boolean ) ) {
 
             throw new \ErrorException( 'CPT show in rest value needs to be defined' );
 
