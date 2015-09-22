@@ -94,6 +94,10 @@ _Generate CPTs, Taxonomies, and Permissions/Roles quickly_
 * ```get_capability_type()``` and ```set_capability_type( Array $capability_type )```
     * ```set_capability_type( String $capability_type )``` will work as well. It will create an Array for you.
         * It will add an "s" at the end to make it plural.
+* ```get_public()``` and ```set_public( boolean $is_public )```
+    * Overrides the `$default` settings
+* ```get_has_archive``` and ```set_has_archive( boolean $has_archive )```
+    * Overrides the `$default` settings
 
 # Custom Taxonomies #
 

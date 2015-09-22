@@ -21,6 +21,8 @@ class CPT {
     protected $_supports = array( 'title', 'editor', 'thumbnail', 'author', ); // Actual WordPress defaults are kind of dumb for this.
     protected $_taxonomies = array();
     protected $_menu_position = 5;
+    protected $_is_public = true;
+    protected $_has_archive = true;
     protected $_capability_type = 'post';
     protected $_capabilities = array();
 
@@ -288,6 +290,46 @@ class CPT {
 
     }
 
+    public function get_public() {
+
+        return $this->_is_public;
+
+    }
+
+    public function set_public( $boolean ) {
+
+        if ( empty( $boolean ) || is_bool( $boolean ) ) {
+
+            throw new \ErrorException( 'CPT public value needs to be defined' );
+
+        }
+
+        $this->_is_public = $boolean;
+
+        return $this;
+
+    }
+
+    public function get_has_archive() {
+
+        return $this->_has_archive;
+
+    }
+
+    public function set_has_archivel( $boolean ) {
+
+        if ( empty( $boolean ) || is_bool( $boolean ) ) {
+
+            throw new \ErrorException( 'CPT has archive value needs to be defined' );
+
+        }
+
+        $this->_has_archive = $boolean;
+
+        return $this;
+
+    }
+
     public function get_capability_type() {
 
         return $this->_capability_type;
@@ -391,12 +433,12 @@ class CPT {
             'supports' => $this->_supports,
             'taxonomies' => $this->_taxonomies,
             'menu_position' => $this->_menu_position,
-            'public' => true,
+            'public' => $this->_is_public,
             'show_ui' => true,
             'show_in_menu' => true,
             'publicly_queryable' => true,
             'exclude_from_search' => false,
-            'has_archive' => true,
+            'has_archive' => $this->_has_archive,
             'query_var' => true,
             'can_export' => true,
             'rewrite' => array(
