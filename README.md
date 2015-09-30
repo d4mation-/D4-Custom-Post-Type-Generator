@@ -89,7 +89,7 @@ _Generate CPTs, Taxonomies, and Permissions/Roles quickly_
         * 80 - below Settings
         * 100 - below second separator
 * ```get_taxonomies()``` and ```set_taxonomies( Array $taxonomies )```
-    * ```set_taxonomies( String $taxonomies )``` will also work as well. It will create an Array for you.
+    * ```set_taxonomies( String $taxonomies )``` will work as well. It will create an Array for you.
        * It will split the String on commas.
 * ```get_capability_type()``` and ```set_capability_type( Array $capability_type )```
     * ```set_capability_type( String $capability_type )``` will work as well. It will create an Array for you.
@@ -103,7 +103,73 @@ _Generate CPTs, Taxonomies, and Permissions/Roles quickly_
 
 # Custom Taxonomies #
 
-Coming Soon...
+### Basic Constructor ###
+
+    $taxonomy = new d4\CPT\Taxonomy( $taxonomy_names = array( 'Custom Taxonomy' ), $post_types = array( 'post' ), $options = array() );
+    // Any Additional Setter functions
+    $taxonomy->create();
+
+```$taxonomy_names``` holds an array of the Singular, Plural, Slug, and "database name" of the Custom Taxonomy. You only need to provide the Singular name for a valid constructor.
+
+* If Plural is not set, the Singular Name will just have an "s" added to it.
+* If Slug is not set, the Singular Name will be converted to lowercase with spaces replaced with hyphens.
+* If Database Name is not set, the singular name will be converted to lowercase with spaces replaced with underscores.
+
+        $taxonomy_names = array(
+            'Custom Taxonomy', // Singular
+            'Custom Taxonomies', // Plural
+            'custom-taxonomy', // Slug
+            'custom_taxonomy', // "database_name"
+        );
+
+```$options``` holds any arguments for registering the Custom Taxonomy that I haven't bothered making a Getter/Setter for. Anything placed in here will override the defaults as well as anything that has been set with the Setter functions within the Class.
+
+    $defaults = array(
+        'labels' => $labels,
+        'public' => false,
+        'show_in_nav_menus' => false,
+        'show_ui' => true,
+        'show_tagcloud' => false,
+        'show_admin_column' => true,
+        'hierarchical' => true,
+        'rewrite' => array(
+            'slug' => $slug,
+            'with_front' => false,
+            'feeds' => false,
+            'pages' => true,
+        ),
+        'query_var' => true,
+    );
+
+    $options = array(
+        'show_tagcloud' => true, // Overrides the default for show_tagcloud
+    );
+
+### Getters/Setters ###
+
+#### General ####
+
+* ```get_singular()``` and ```set_singular( String $singular )```
+    * Overrides the Singular set in the Constructor
+* ```get_plural()``` and ```set_plural( String $plural )```
+    * Overrides the Plural set in the Constructor
+* ```get_slug()``` and ```set_slug( String $slug )```
+    * Overrides the Slug set in the Constructor
+* ```get_db_name()``` and ```set_db_name( String $db_name )```
+    * Overrides the Database Name set in the Constructor
+
+#### [`register_taxonomy()`](https://codex.wordpress.org/Function_Reference/register_taxonomy) Arguments ####
+
+* ```get_public()``` and ```set_public( boolean $public )```
+    * Overrides the `$default` settings
+* ```get_show_admin_column()``` and ```set_get_show_admin_column( boolean $show_admin_column )```
+    * Overrides the `$default` settings
+* ```get_hierarchical()``` and ```set_hierarchical( boolean $hierarchical )```
+    * Overrides the `$default` settings
+* ```get_post_types()``` and ```set_post_types( Array $post_types )```
+    * Sets the Post Type(s) for the Custom Taxonomy. Defaults to ```array( 'post' )```, meaning without changing this via ```set_post_types()``` your Custom Taxonomy will automatically be registered to Posts.
+    * ```set_post_types( String $post_types )``` will work as well. It will create an Array for you.
+       * It will split the String on commas.
 
 # Custom User Roles #
 
