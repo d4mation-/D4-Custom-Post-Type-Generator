@@ -229,6 +229,26 @@ class Taxonomy {
 
     }
 
+    public function get_hierarchical() {
+
+        return $this->_is_hierarchical;
+
+    }
+
+    public function set_hierarchical( $boolean ) {
+
+        if ( empty( $boolean ) || ! is_bool( $boolean ) ) {
+
+            throw new \ErrorException( 'Taxonomy hierarchical value needs to be defined' );
+
+        }
+
+        $this->_is_hierarchical = $boolean;
+
+        return $this;
+
+    }
+
     public function get_post_types() {
 
         return $this->_post_types;
@@ -247,28 +267,8 @@ class Taxonomy {
             $this->_post_types = $post_types;
         }
         else{
-            $this->_post_types = array( $post_types );
+            $this->_post_types = explode( ',', trim( $post_types ) );
         }
-
-    }
-
-    public function get_hierarchical() {
-
-        return $this->_is_hierarchical;
-
-    }
-
-    public function set_hierarchical( $boolean ) {
-
-        if ( empty( $boolean ) || ! is_bool( $boolean ) ) {
-
-            throw new \ErrorException( 'Taxonomy hierarchical value needs to be defined' );
-
-        }
-
-        $this->_is_hierarchical = $boolean;
-
-        return $this;
 
     }
 
@@ -308,14 +308,13 @@ class Taxonomy {
             'show_tagcloud' => false,
             'show_admin_column' => $this->_show_admin_column,
             'hierarchical' => $this->_is_hierarchical,
-
             'rewrite' => array(
                 'slug' => $slug,
                 'with_front' => false,
                 'feeds' => false,
-                'pages' => true
+                'pages' => true,
             ),
-            'query_var' => true
+            'query_var' => true,
         );
 
         // Merge user submitted options with defaults.
